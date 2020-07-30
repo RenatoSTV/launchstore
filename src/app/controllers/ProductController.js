@@ -34,7 +34,7 @@ module.exports = {
         }
 
         if(req.files.length == 0)
-            returnres.send('Please, send at least one image.')
+            return res.send('Please, send at least one image.')
 
 
         let results = await Product.create(req.body)
