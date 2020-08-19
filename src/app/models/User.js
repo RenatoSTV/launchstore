@@ -43,7 +43,7 @@ module.exports = {
                 passwordHash,
                 data.cpf_cnpj.replace(/\D/g, ""),
                 data.cep.replace(/\D/g, ""),
-                data.addres
+                data.address
             ]
 
             const results = await db.query(query, values)
@@ -53,5 +53,25 @@ module.exports = {
             console.error(errr)
         }
 
+    },
+    async update(id, fields) {
+        let query = "UPDATE users SET"
+
+        Object.keys(fields).map((key, index, array) => {
+            if((index + 1) < array.length) {
+                query = `${query}
+                    ${key} = '${fields[key]}',
+                `
+            } else {
+                // last iteration
+                query = `${query}
+                    ${key} = '${fields[key]}'
+                    WHERE id = ${id}
+                `
+            }
+        })
+
+        await db.query(query)
+        return
     }
 }

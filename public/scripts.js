@@ -51,21 +51,21 @@ Mask = {
     }
 }
 
-formDelete = document.querySelector("#form-delete")
+// formDelete = document.querySelector("#form-delete")
 
-function Delete() {
-    formDelete.addEventListener("submit", function (event) {
-        const confirmation = confirm("Deseja Deletar?")
-        if (!confirmation) {
-            event.preventDefault()
-        }
-    })
+// function Delete() {
+//     formDelete.addEventListener("submit", function (event) {
+//         const confirmation = confirm("Deseja Deletar?")
+//         if (!confirmation) {
+//             event.preventDefault()
+//         }
+//     })
 
-}
+// }
 
-if (formDelete) {
-    Delete()
-}
+// if (formDelete) {
+//     Delete()
+// }
 
 PhotosUpload = {
     input: "",
