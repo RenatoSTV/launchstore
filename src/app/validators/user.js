@@ -35,7 +35,7 @@ async function post(req, res, next) {
     }
 
     //check if user exists [email,cpf_cnpj]
-    let { email, cpf_cnpj, password, passwordRepeat }= req.body
+    let { email, cpf_cnpj, password, passwordRepeat } = req.body
 
     cpf_cnpj = cpf_cnpj.replace(/\D/g, "")
 

@@ -198,7 +198,6 @@ Lightbox = {
         Lightbox.target.style.top = 0
         Lightbox.target.style.bottom = 0
         Lightbox.closeButton.style.top = 0
-
     },
     close() {
         Lightbox.target.style.opacity = 0
