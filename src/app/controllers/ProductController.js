@@ -1,3 +1,5 @@
+const { unlinkSync } = require('fs')
+
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const File = require("../models/File");
@@ -51,11 +53,11 @@ module.exports = {
       });
 
       const filesPromise = req.files.map((file) =>
-        File.create({ ...file, product_id })
+        File.create({ name: file.filename, path: file.path, product_id })
       );
       await Promise.all(filesPromise);
 
-      return res.redirect(`/products/${productId}/edit`);
+      return res.redirect(`/products/${product_id}/edit`);
     } catch (error) {
       console.error(error);
     }
@@ -117,63 +119,68 @@ module.exports = {
     }
   },
   async put(req, res) {
-      try {
-        const keys = Object.keys(req.body);
+    try {
+      const keys = Object.keys(req.body);
 
-        for (key of keys) {
-          if (req.body[key] == "" && key != "removed_files") {
-            return res.send("Please, fill all fields!");
-          }
+      for (key of keys) {
+        if (req.body[key] == "" && key != "removed_files") {
+          return res.send("Please, fill all fields!");
         }
-    
-        if (req.files.length != 0) {
-          const newFilesPromise = req.files.map((file) =>
-            File.create({ ...file, product_id: req.body.id })
-          );
-    
-          await Promise.all(newFilesPromise);
-        }
-    
-        if (req.body.removed_files) {
-          const removedFiles = req.body.removed_files.split(",");
-          const lastIndex = removedFiles.length - 1;
-          removedFiles.splice(lastIndex, 1);
-    
-          const removedFilesPromise = removedFiles.map((id) => File.delete(id));
-    
-          await Promise.all(removedFilesPromise);
-        }
-    
-        req.body.price = req.body.price.replace(/\D/g, "");
-    
-        if (req.body.old_price != req.body.price) {
-          const oldProduct = await Product.find(req.body.id);
-    
-          req.body.old_price = oldProduct.rows[0].price;
-        }
-    
-        await Product.update(req.body.id, {
-            category_id: req.body.category_id,
-            name: req.body.name,
-            description: req.body.description,
-            old_price: req.body.old_price,
-            price: req.body.price,
-            quantity: req.body.quantity,
-            status: req.body.status,
-        });
-    
-        return res.redirect(`/products/${req.body.id}`);
-      } catch (error) {
-          console.error(error);
       }
-    
+
+      if (req.files.length != 0) {
+        const newFilesPromise = req.files.map((file) =>
+          File.create({ ...file, product_id: req.body.id })
+        );
+
+        await Promise.all(newFilesPromise);
+      }
+
+      if (req.body.removed_files) {
+        const removedFiles = req.body.removed_files.split(",");
+        const lastIndex = removedFiles.length - 1;
+        removedFiles.splice(lastIndex, 1);
+
+        const removedFilesPromise = removedFiles.map((id) => File.delete(id));
+
+        await Promise.all(removedFilesPromise);
+      }
+
+      req.body.price = req.body.price.replace(/\D/g, "");
+
+      if (req.body.old_price != req.body.price) {
+        const oldProduct = await Product.find(req.body.id);
+
+        req.body.old_price = oldProduct.rows[0].price;
+      }
+
+      await Product.update(req.body.id, {
+        category_id: req.body.category_id,
+        name: req.body.name,
+        description: req.body.description,
+        old_price: req.body.old_price,
+        price: req.body.price,
+        quantity: req.body.quantity,
+        status: req.body.status,
+      });
+
+      return res.redirect(`/products/${req.body.id}`);
+    } catch (error) {
+      console.error(error);
+    }
   },
   async delete(req, res) {
+    const files = await Product.files(req.body.id);
+    
     await Product.delete(req.body.id);
 
-    const removedFilesPromise = removedFiles.map((id) => File.delete(id));
-
-    await Promise.all(removedFilesPromise);
+    files.map((file) => {
+      try {
+        unlinkSync(file.path);
+      } catch (error) {
+        console.error(error);
+      }
+    });
 
     return res.redirect("/products/create");
   },

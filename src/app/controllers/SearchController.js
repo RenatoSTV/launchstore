@@ -24,7 +24,7 @@ module.exports = {
             async function getImage(productId) {
                 let files = await Product.files(productId)
                 files = files.map(file => 
-                    `${req.protocol}://${req.headers.host}${file.path.replace("public\\images\\", "\\\\images\\\\")}`
+                    `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`
                 )
     
                 return files[0]
@@ -56,6 +56,7 @@ module.exports = {
 
                 return categoriesFiltered
             }, [])
+            console.log(products)
 
             return res.render("search/index", { products, search, categories })
 

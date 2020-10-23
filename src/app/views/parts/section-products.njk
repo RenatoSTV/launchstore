@@ -8,7 +8,7 @@
         <div class="items">
             {% for product in products %}
                 <div class="product">
-                    <div class="image" style="background-image: url({{product.img if product.img else '//placehold.it/500x500?text=Produto sem imagem'}})"></div>
+                    <div class="image" style="background-image: url({{product.img if product.img else '/placehold.it/500x500?text=Produto sem imagem'}})"></div>
                     <div class="imagem" style="backgroung: url()"></div>
                     {% if product.oldPrice != product.price %}
                         <div class="old-price">{{product.oldPrice}}</div>
