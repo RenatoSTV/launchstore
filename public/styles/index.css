@@ -296,7 +296,6 @@ form .item #photos-preview img {
   height: 150px;
   object-fit: cover;
 }
-
 #photos-preview .photo{
   position: relative;
 }
