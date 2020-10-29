@@ -1,28 +1,27 @@
 {% extends 'layout.njk' %}
 
+{%import "parts/card.njk" as card%}
+
 {% block content %}
-    <section class="user-dashboard container form">
 
-        <form method="POST" action="/users?_method=PUT">
-            <div class="header">
+    {% call card.render('Detalhes', 'user-dashboard container')%}
+    <form method="POST" action="/users?_method=PUT">
 
-                <h3>Detalhes</h3>
-            </div>
-            <div class="fields">
+        <div class="fields">
 
-                {% include 'user/fields.njk' %}
-
-                <input type="hidden" name="id" value="{{user.id}}">
-            </div>
-            <button class="button edit" type="submit">Atualizar</button>
-        </form>
-        <form id="form-delete" action="/users?_method=DELETE" method="post">
+            {% include 'user/fields.njk' %}
 
             <input type="hidden" name="id" value="{{user.id}}">
-            <button class="button delete" type="submit">Deletar</button>
+        </div>
+        <button class="button edit" type="submit">Atualizar</button>
+    </form>
+    <form id="form-delete" action="/users?_method=DELETE" method="post">
 
-        </form>
-        {% include 'user/confirm.njk' %}
-    </section>
+        <input type="hidden" name="id" value="{{user.id}}">
+        <button class="button delete" type="submit">Deletar</button>
+
+    </form>
+    {% include 'user/confirm.njk' %}
+    {%endcall%}
 
 {% endblock content %}
